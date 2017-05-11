@@ -131,7 +131,6 @@ struct stereo_mode {
    int mode_number;
    const char *short_name;
    const char *long_name;
-   int rank;
 };
 
 static const struct stereo_mode
