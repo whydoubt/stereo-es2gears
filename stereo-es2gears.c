@@ -654,8 +654,7 @@ choose_egl_config(struct gbm_context *context)
 }
 
 static int
-create_egl_surface(struct gbm_context *context,
-                   const struct stereo_options *options)
+create_egl_surface(struct gbm_context *context)
 {
    context->egl_surface =
       eglCreateWindowSurface(context->edpy,
@@ -691,8 +690,7 @@ create_egl_context(struct gbm_context *context)
 }
 
 static struct gbm_context *
-stereo_prepare_context(struct gbm_dev *dev,
-                       const struct stereo_options *options)
+stereo_prepare_context(struct gbm_dev *dev)
 {
    struct gbm_context *context;
 
@@ -722,7 +720,7 @@ stereo_prepare_context(struct gbm_dev *dev,
    if (choose_egl_config(context))
       goto error_gbm_surface;
 
-   if (create_egl_surface(context, options))
+   if (create_egl_surface(context))
       goto error_gbm_surface;
 
    if (create_egl_context(context))
@@ -904,7 +902,7 @@ winsys_connect(struct stereo_winsys *winsys,
       goto error;
    }
 
-   winsys->context = stereo_prepare_context(winsys->dev, options);
+   winsys->context = stereo_prepare_context(winsys->dev);
    if (winsys->context == NULL) {
       ret = -ENOENT;
       goto error;
