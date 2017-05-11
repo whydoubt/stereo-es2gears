@@ -151,6 +151,8 @@ stereo_modes[] = {
 #define VERTICES_PER_TOOTH 34
 #define GEAR_VERTEX_STRIDE 6
 
+#define UNUSED(x) (void)(x)
+
 /**
  * Struct describing the vertices in triangle strip
  */
@@ -776,6 +778,11 @@ page_flip_handler(int fd,
                   unsigned int usec,
                   void *data)
 {
+   UNUSED(fd);
+   UNUSED(frame);
+   UNUSED(sec);
+   UNUSED(usec);
+
    struct gbm_dev *dev = data;
 
    dev->pending_swap = 0;
@@ -1613,6 +1620,8 @@ renderer_free(struct stereo_renderer *renderer)
 static void
 sigint_handler(int sig)
 {
+   UNUSED(sig);
+
    quit = 1;
 }
 
