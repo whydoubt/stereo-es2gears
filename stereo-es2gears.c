@@ -78,7 +78,7 @@ struct mode_layout {
     * TV then effectively scales them back up to this size */
    uint32_t virtual_eye_width, virtual_eye_height;
    /* Offset in pixels to the position of the right eye within the buffer */
-   uint32_t right_eye_x, right_eye_y;
+   uint32_t right_eye_x, left_eye_y;
 };
 
 struct gbm_dev {
@@ -360,7 +360,7 @@ get_layout_for_mode(struct mode_layout *layout,
       layout->virtual_eye_height = layout->eye_height;
       /* make the right eye off the screen to get rid of it */
       layout->right_eye_x = layout->eye_width;
-      layout->right_eye_y = 0;
+      layout->left_eye_y = 0;
       break;
    case DRM_MODE_FLAG_3D_SIDE_BY_SIDE_HALF:
       layout->buffer_width = mode->hdisplay;
@@ -370,7 +370,7 @@ get_layout_for_mode(struct mode_layout *layout,
       layout->virtual_eye_width = layout->buffer_width;
       layout->virtual_eye_height = layout->eye_height;
       layout->right_eye_x = layout->eye_width;
-      layout->right_eye_y = 0;
+      layout->left_eye_y = 0;
       break;
    case DRM_MODE_FLAG_3D_SIDE_BY_SIDE_FULL:
       layout->buffer_width = mode->hdisplay * 2;
@@ -380,7 +380,7 @@ get_layout_for_mode(struct mode_layout *layout,
       layout->virtual_eye_width = layout->eye_width;
       layout->virtual_eye_height = layout->eye_height;
       layout->right_eye_x = layout->eye_width;
-      layout->right_eye_y = 0;
+      layout->left_eye_y = 0;
       break;
    case DRM_MODE_FLAG_3D_TOP_AND_BOTTOM:
       layout->buffer_width = mode->hdisplay;
@@ -390,7 +390,7 @@ get_layout_for_mode(struct mode_layout *layout,
       layout->virtual_eye_width = layout->eye_width;
       layout->virtual_eye_height = layout->buffer_height;
       layout->right_eye_x = 0;
-      layout->right_eye_y = layout->eye_height;
+      layout->left_eye_y = layout->eye_height;
       break;
    case DRM_MODE_FLAG_3D_FRAME_PACKING:
       layout->buffer_width = mode->hdisplay;
@@ -400,7 +400,7 @@ get_layout_for_mode(struct mode_layout *layout,
       layout->virtual_eye_width = layout->eye_width;
       layout->virtual_eye_height = layout->eye_height;
       layout->right_eye_x = 0;
-      layout->right_eye_y = mode->vtotal;
+      layout->left_eye_y = mode->vtotal;
       break;
    default:
       assert(0);
@@ -1380,12 +1380,11 @@ static void
 set_eye(struct stereo_renderer *renderer, int eye)
 {
    if (eye == 0) {
-      glViewport(0, 0,
+      glViewport(0, renderer->layout.left_eye_y,
                  renderer->layout.eye_width,
                  renderer->layout.eye_height);
    } else {
-      glViewport(renderer->layout.right_eye_x,
-                 renderer->layout.right_eye_y,
+      glViewport(renderer->layout.right_eye_x, 0,
                  renderer->layout.eye_width,
                  renderer->layout.eye_height);
    }
