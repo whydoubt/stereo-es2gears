@@ -221,12 +221,12 @@ stereo_find_crtc(drmModeRes *res, drmModeConnector *conn,
 {
    drmModeEncoder *enc;
    int i, j;
-   int32_t crtc;
+   uint32_t crtc;
 
    /* first try the currently conected encoder+crtc */
    if (conn->encoder_id) {
       enc = drmModeGetEncoder(dev->fd, conn->encoder_id);
-      if (enc->crtc_id >= 0) {
+      if (enc->crtc_id > 0) {
          drmModeFreeEncoder(enc);
          dev->crtc = enc->crtc_id;
          return 0;
@@ -255,7 +255,7 @@ stereo_find_crtc(drmModeRes *res, drmModeConnector *conn,
          crtc = res->crtcs[j];
 
          /* we have found a CRTC, so save it and return */
-         if (crtc >= 0) {
+         if (crtc > 0) {
             drmModeFreeEncoder(enc);
             dev->crtc = crtc;
             return 0;
