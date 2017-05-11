@@ -220,7 +220,7 @@ stereo_find_crtc(drmModeRes *res, drmModeConnector *conn,
                  struct gbm_dev *dev)
 {
    drmModeEncoder *enc;
-   unsigned int i, j;
+   int i, j;
    int32_t crtc;
 
    /* first try the currently conected encoder+crtc */
@@ -273,7 +273,7 @@ stereo_find_crtc(drmModeRes *res, drmModeConnector *conn,
 static const struct stereo_mode *
 get_stereo_mode(int mode_number)
 {
-   int i;
+   unsigned int i;
 
    for (i = 0; i < sizeof stereo_modes / sizeof stereo_modes[0]; i++)
       if (stereo_modes[i].mode_number == mode_number)
@@ -296,7 +296,7 @@ get_mode_rank(const drmModeModeInfo *mode)
       DRM_MODE_FLAG_3D_FRAME_PACKING,
    };
    int layout;
-   int i;
+   unsigned int i;
 
    if (mode == NULL)
       return -1;
