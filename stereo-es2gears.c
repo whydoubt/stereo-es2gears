@@ -109,7 +109,7 @@ struct gbm_context {
 struct stereo_options {
    const char *card;
    const char *stereo_layout;
-   int connector;
+   uint32_t connector;
 };
 
 struct stereo_winsys {
@@ -497,14 +497,14 @@ get_connector(int fd, drmModeRes *res,
          return NULL;
       }
 
-      if (options->connector == -1 ||
+      if (options->connector == 0 ||
           conn->connector_id == options->connector)
          return conn;
       drmModeFreeConnector(conn);
    }
 
    fprintf(stderr,
-           "couldn't find connector with id %i\n",
+           "couldn't find connector with id %u\n",
            options->connector);
 
    return NULL;
@@ -1661,7 +1661,7 @@ process_options(struct stereo_options *options, int argc, char **argv)
 
    memset(options, 0, sizeof *options);
 
-   options->connector = -1;
+   options->connector = 0;
 
    while ((opt = getopt(argc, argv, args)) != -1) {
       switch (opt) {
